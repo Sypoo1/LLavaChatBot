@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  redis:
+    image: 'redis:latest'
+    container_name: redis-database
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data
+    networks:
+      - mynetwork
+
+  app:
+    build: .
+    container_name: python-app
+    restart: always
+    ports:
+      - '8501:8501'
+    depends_on:
+      - redis
+    network_mode: host 
+
+networks:
+  mynetwork:
+    driver: bridge
